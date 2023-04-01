@@ -1,0 +1,60 @@
+﻿@model Product
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+    <div class="text-center">
+        <h2>Cascading Dropdown Demo</h2>
+        <div class="row form-group p-4 border m-2">
+            <div class="col-2">
+                Category
+            </div>
+            <div class="col-4">
+                <select asp-for="CategoryId" class="form-select" id="categoryId"
+                        asp-items="@ViewBag.categories">
+                    <option disabled selected>--Select Category--</option>
+                    </select>
+            </div>
+            <div class="col-2">
+                Product
+            </div>
+            <div class="col-4">
+                <select asp-for="Id" class="form-select" id="productId"></select>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            getProductByCategoryId();
+        })
+        $("#categoryId").change(function () {
+            getProductByCategoryId();
+        });
+        var getProductByCategoryId = function(){
+            $.ajax({
+                url: '@Url.Action("GetProductByCategoryId","Home")',
+                type:'GET',
+                data:{
+                    categoryId: $('#categoryId').val(),
+                },
+                success: function(data){
+                    $('#productId').find('option').remove()
+                    $(data).each(
+                        function(index,item){
+                            $('#productId').append('<option value="'+item.id+'">'+ item.name+ '</option>')
+                        }
+                    );
+                }
+            })
+        }
+    </script>
+}
